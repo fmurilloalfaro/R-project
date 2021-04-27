@@ -5,6 +5,106 @@ date: "4/27/2021"
 output: html_document
 ---
 
+
+
+##Invocación de librerias
 ```{r setup, include=FALSE}
+library(ggplot2)
+library(corrplot)
+library(PerformanceAnalytics)
+library(factoextra)
+library(ade4)
+library(FactoMineR)
+library(readxl)
+```
+
+## Read Clientes
+```{r}
+clientes<-read.csv("db/sqlclientes.csv", sep = ",", header = T)
+head(clientes,1)
+```
+
+## Read Productos
+```{r}
+require("readxl")
+productos<-readxl::read_xlsx("db/sqlproductos.xlsx", sheet=1)
+head(productos,1)
+```
+
+## Read Ventas
+```{r}
+ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
+head(ventas,1)
+```
+
+##Summary
+```{r}
+summary(clientes)
+summary(productos)
+summary(ventas)
 
 ```
+
+### Valores atipicos: Boxplot
+### Clientes
+```{r}
+boxplot(clientes$ESTADO_CIVIL, col = terrain.colors(2), main="Tabla Clientes - Est Civil")
+```
+
+```{r}
+boxplot(clientes$SEXO, col = terrain.colors(5), main="Tabla Clientes - Sexo")
+```
+
+### Productos
+```{r}
+boxplot(productos$PRECIO, col = terrain.colors(3), main="Tabla Productos - Precio")
+```
+
+```{r}
+boxplot(productos$UTLIDAD, col = terrain.colors(4), main="Tabla Productos - Utilidad")
+```
+
+### Ventas
+```{r}
+boxplot(ventas$DEPARTAMENTO, col = terrain.colors(4), main="Tabla Ventas - Departamento")
+```
+
+```{r}
+boxplot(ventas$MONTO, col = terrain.colors(4), main="Tabla Ventas - Monto")
+```
+
+```{r}
+boxplot(ventas$SUCURSAL, col = terrain.colors(4), main="Tabla Ventas - Sucursal")
+```
+
+```{r}
+boxplot(ventas$PRODUCTO, col = terrain.colors(4), main="Tabla Ventas - Producto")
+```
+
+```{r}
+boxplot(ventas$USUARIO, col = terrain.colors(4), main="Tabla Ventas - usuario")
+```
+
+### Datos correlacionales
+### Clientes
+
+### Datos nulos
+### Clientes
+###```{r}
+###which(is.na(clientes))
+###```
+
+### Productos
+```{r}
+which(is.na(productos))
+```
+
+### Ventas
+```{r}
+which(is.na(ventas))
+```
+
+
+
+
+
