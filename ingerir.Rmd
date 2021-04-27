@@ -1,0 +1,13 @@
+---
+title: "ingerir"
+author: "Fernanda Murillo"
+date: "27/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(xlsx)
+library(dplyr)
+```
+
+
