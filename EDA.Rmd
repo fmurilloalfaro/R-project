@@ -1,0 +1,10 @@
+---
+title: "EDA"
+author: "Luisa López Cordero"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+```
