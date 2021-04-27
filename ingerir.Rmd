@@ -8,18 +8,86 @@ output: html_document
 ```{r setup, include=FALSE}
 library(xlsx)
 library(dplyr)
+library(readxl)
 ```
 
-### Carga de los datos
+### Read Clientes
+```{r}
+clientes<-read.csv("db/sqlclientes.csv", sep = ",", header = T)
+head(clientes)
+```
+
+### Read Productos
 ```{r}
 productos<-read.xlsx("db/sqlproductos.xlsx", sheetIndex = 1)
 names(productos)<-c("codigo","nombre","precio","utlidad")
 attach(productos)
 ```
 
-### Revisar valores atípicos
+### Read Ventas
+```{r}
+ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
+head(ventas, 100)
+```
+
+### Revisar valores atípicos, solo se utilizará codigo y precio.
 ```{r}
 boxplot(productos$codigo)
 boxplot(productos$precio)
+
+#which(is.na(productos))
+# productos <- na.omit(productos) # para eliminar valores nulos
 ```
+
+### Para explorar los datos atípicos
+```{r}
+productos %>% filter(precio <= 95810) %>%
+```
+
+### Para explorar los datos no atípicos
+```{r}
+productos %>% filter(precio <= 95810) %>%
+  summarise(mediana = median(precio))
+```
+
+### Histograma de los datos
+```{r}
+hist(productos$precio, freq = F, col = "gray")
+lines(density(productos$precio), col="red")
+```
+
+### Función de tratamiento de valores atípicos
+```{r}
+outlayers <- function(productos,inferior,superior)
+{
+  data[data < inferior] <- mean(data)
+  data[data > superior] <- median(data)
+  data
+}
+```
+
+### Para agregar la nueva columna con los datos tratados
+```{r}
+cproductos<-productos %>% mutate(cprecio=outlayers(productos$precio, 1, 95810))
+head(cproductos)
+
+boxplot(cproductos$cprecio)
+
+# este todavia no funciona jeje
+```
+
+### Creación del modelo de regresión línea simple
+```{r}
+modelo<-lm(data = cproductos, codigo, nombre, utlidad~cprecio)
+```
+
+### Ver los estadísticos del modelo
+```{r}
+summary(lm_modelo)
+```
+
+
+
+
+
 
