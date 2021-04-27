@@ -10,4 +10,16 @@ library(xlsx)
 library(dplyr)
 ```
 
+### Carga de los datos
+```{r}
+productos<-read.xlsx("db/sqlproductos.xlsx", sheetIndex = 1)
+names(productos)<-c("codigo","nombre","precio","utlidad")
+attach(productos)
+```
+
+### Revisar valores atípicos
+```{r}
+boxplot(productos$codigo)
+boxplot(productos$precio)
+```
 
