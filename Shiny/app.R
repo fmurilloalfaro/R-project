@@ -13,6 +13,9 @@ library(plotly)
 library(ECharts2Shiny)
 library(ggplot2)
 library(DT)
+library(dplyr)
+library(highcharter) 
+options(highcharter.theme = hc_theme_smpl(tooltip = list(valueDecimals = 2)))
 
 
 #Datos para grafico de productos mas vendidos
@@ -64,11 +67,11 @@ ui = dashboardPage(
             ),
             
             tabItem(tabName = "totalProductos",
-                    titlePanel(title = h1("Total de productos mas vendidos", align = "center", style="align:center;margin-bottom:50px")),
-                    loadEChartsLibrary(),
-                    
-                    tags$div(id="test", style="width:100%;height:800px;"),
-                    deliverChart(div_id = "test")
+                    hc <- dat %>%
+                      hchart(
+                        "pie",
+                        name = "Fruit consumption"
+                      ),
             ),
             
             tabItem(tabName = "empleadosMonto",
