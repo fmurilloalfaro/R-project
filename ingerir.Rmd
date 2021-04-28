@@ -10,9 +10,10 @@ library(xlsx)
 library(dplyr)
 library(readxl)
 library(tidyverse)
+library(corrplot)
 
 # Evitar warnings
-options(warn=-1)
+#options(warn=-1)
 ```
 
 
@@ -21,14 +22,14 @@ options(warn=-1)
 ### READ CLIENTES CSV
 ```{r}
 #CLIENTES
-clientes<-read.csv("db/sqlclientes.csv", sep = ",", header = T)
+clientes<-read.csv("db/clients.csv", sep = ",", header = T)
 head(clientes)
 ```
 
 ### READ PRODUCTOS XLSX
 ```{r}
 #PRODUCTOS
-productos<-read.xlsx("db/sqlproductos.xlsx", sheetIndex = 1)
+productos<-read.xlsx("db/products.xlsx", sheetIndex = 1)
 names(productos)<-c("codigo","nombre","precio","utlidad")
 attach(productos)
 ```
@@ -36,8 +37,16 @@ attach(productos)
 ### READ VENTAS TSV
 ```{r}
 #VENTAS
-ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
+ventas<-read.table("db/sales.tsv",sep = '\t', header = TRUE)
 head(ventas, 1)
+summary(ventas)
+glimpse(ventas)
+cor(ventas$MONTO,ventas$SUCURSAL)
+#corrplot(cor(ventas$MONTO), method = "color")
+
+for (i in 1:14) {
+  boxplot(ventas[,i], main=names(ventas[i]))
+}
 ```
 
 
@@ -128,10 +137,10 @@ outlayers <- function(productos,inferior,superior)
 ### Para agregar la nueva columna con los datos tratados
 
 ```{r}
-cproductos<-productos %>% mutate(ccodigo=outlayers(productos$codigo, 10, 95810))
+cventas<-ventas %>% mutate(c=outlayers(productos$utlidad, 1, 23))
 head(cproductos)
 
-boxplot(cproductos$ccodigo)
+boxplot(cproductos$cutlidad)
 ```
 
 ### Creación del modelo de regresión línea simple
@@ -155,8 +164,25 @@ plot(cproductos$cprecio$codigo,xlab = "precio",
      ylab = "codigo", main ="Prueba de la regresión lineal " )
 abline(lm_modelo,col("blue"))
 
-ggplot(cproductos)
+ggplot(cproductos,aes(cprecio,codigo))+
+  geom_point(colours="red")+
+  geom_smooth(method = "lm",colour="blue")
 ```
 
+
+## EVALUAR LA PREDICCIÓN
+```{r}
+predict(lm_modelo.data.frame(cprecio=95810))
+```
+
+## EVALUAR SOBRE LOS DATOS EXISTENTES
+```{r}
+resultado<-data.frame(cproductos$cprecio,codigo,lm_modelo$fitted.values, round(codigo-lm_modelo$fitted.values))
+
+names(resultado)<-c("precio","codigo","ventas","diferencia")
+
+view(resultado)
+
+```
 
 

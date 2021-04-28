@@ -8,13 +8,10 @@ output: html_document
 ```{r setup, include=FALSE}
 library(xlsx)
 library(dplyr)
+library(ggplot2)
 library(readxl)
-```
-
-### Read Clientes
-```{r}
-clientes<-read.csv("db/sqlclientes.csv", sep = ",", header = T)
-head(clientes)
+library(corrplot)
+library(caret)
 ```
 
 ### Read Productos
@@ -29,3 +26,10 @@ attach(productos)
 ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
 head(ventas, 100)
 ```
+
+## Particionamiento de datos y testeo
+```{r}
+t.id<-createDataPartition(ventas$MONTO)
+view(t.id)
+```
+
