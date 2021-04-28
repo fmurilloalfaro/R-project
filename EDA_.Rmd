@@ -15,11 +15,39 @@ library(FactoMineR)
 library(readxl)
 ```
 
+## ------------------------------LECTOR DE ARCHIVOS-----------------------------
+
 ## READ CLIENTES
 ```{r}
-clientes<-read.csv("db/clientes.csv", sep = ",", header = T)
+clientes<-read.csv("db/clients.csv", sep = ",", header = T)
+head(clientes,3)
 ```
 
+## READ PRODUCTOS
+```{r}
+require("readxl")
+productos<-readxl::read_xlsx("db/products.xlsx", sheet=1)
+head(productos,1)
+```
 
+## READ VENTAS
+```{r}
+ventas<-read.table("db/ventas.tsv",sep = '\t', header = TRUE)
+head(ventas,1)
+```
+
+## ------------------------------TIPOS DE DATOS---------------------------------
+## SUMMARY
+```{r}
+summary(clientes)
+summary(productos)
+summary(ventas)
+```
+
+## ------------------------------VALORES ATIPICOS-------------------------------
+## BOXPLOT
+```{r}
+boxplot(clientes$)
+```
 
 
