@@ -2,7 +2,11 @@
 title: "Modelos"
 author: "Mariana Vargas Huertas"
 date: "27/4/2021"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +15,8 @@ library(dplyr)
 library(ggplot2)
 library(readxl)
 library(corrplot)
-#library(caret)
+library(caret)
+library(PerformanceAnalytics)
 ```
 
 ### Read Productos
@@ -23,13 +28,48 @@ attach(productos)
 
 ### Read Ventas
 ```{r}
-ventas<-read.table("db/sales.tsv",sep = '\t', header = TRUE)
+ventas<-read.table("db/sqlsales.tsv",sep = '\t', header = TRUE)
 head(ventas, 10)
+summary(ventas)
+glimpse(ventas)
+cor(ventas)
+
 ```
+
+
+```{r}
+corrplot(cor(ventas),method = "square", col = terrain.colors(100))
+```
+
+
+
+```{r}
+par(mfrow=c(3,3))
+for (i in 1:7) {
+  boxplot(ventas[,i], main=names(ventas[i]), col = "aquamarine3")
+  
+}
+
+options(warn=-1)
+chart.Correlation(cor(ventas),histogram = T,method ="spearman")
+```
+
 
 ## Particionamiento de datos y testeo
 ```{r}
-#t.id<-createDataPartition(ventas$MONTO)
-#view(t.id)
+dim(ventas) #cantidad total de datos
+training<-createDataPartition(ventas$MONTO,p=0.7,list = F)
+```
+
+## Creación del modelo de regresión lineal múltiple
+```{r}
+attach(ventas)
+modelo<-lm(data=ventas[training,],MONTO~.)
+
+```
+
+
+```{r}
+summary(modelo)
 ```
 

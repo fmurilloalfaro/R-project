@@ -2,7 +2,11 @@
 title: "ingerir"
 author: "Fernanda Murillo"
 date: "27/4/2021"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -123,7 +127,7 @@ lines(density(ventas$MONTO), col="magenta2")
 
 ### |PRODUCTOS|
 ```{r}
-outlayers <- function(productos,inferior,superior)
+outlayers <- function(ventas,inferior,superior)
 {
   data[data < inferior] <- mean(data)
   data[data > superior] <- median(data)
@@ -132,14 +136,13 @@ outlayers <- function(productos,inferior,superior)
 ```
 
 
-
 ### ---------------- Para agregar la nueva columna con los datos tratados ----------------
 
 ```{r}
-#cventas<-ventas %>% mutate(c=outlayers(productos$utlidad, 1, 23))
-#head(cproductos)
+#cventas<-ventas %>% mutate(cmonto=outlayers(ventas$MONTO, 10, 5662))
+#head(cventas)
 
-#boxplot(cproductos$cutlidad)
+#boxplot(cventas)
 ```
 
 ### Creación del modelo de regresión línea simple
@@ -184,4 +187,17 @@ outlayers <- function(productos,inferior,superior)
 
 ```
 
+
+
+```{r}
+corrplot(cor(ventas),method = "square", col = terrain.colors(100))
+```
+
+
+```{r}
+for (i in 1:7) {
+  boxplot(ventas[,i], main=names(ventas[i]), col = "aquamarine3")
+  
+}
+```
 
