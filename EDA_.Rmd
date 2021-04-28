@@ -15,13 +15,7 @@ library(FactoMineR)
 library(readxl)
 ```
 
-## ------------------------------LECTOR DE ARCHIVOS-----------------------------
-
-### READ CLIENTES
-```{r}
-clientes<-read.csv("db/clients.csv", sep = ",", header = T)
-head(clientes,3)
-```
+## ------------------------------LECTOR DE ARCHIVOS-----------------
 
 ### READ PRODUCTOS
 ```{r}
@@ -35,6 +29,13 @@ head(productos,1)
 ventas<-read.table("db/sqlsales.tsv",sep = '\t', header = TRUE)
 head(ventas,2)
 ```
+
+### READ CLIENTES
+```{r}
+clientes<-read.csv("db/clients.csv", sep = ",", header = T)
+head(clientes,3)
+```
+
 
 ## ------------------------------TIPOS DE DATOS---------------------------------
 ### SUMMARY
