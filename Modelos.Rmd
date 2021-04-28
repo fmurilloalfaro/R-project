@@ -11,25 +11,25 @@ library(dplyr)
 library(ggplot2)
 library(readxl)
 library(corrplot)
-library(caret)
+#library(caret)
 ```
 
 ### Read Productos
 ```{r}
-productos<-read.xlsx("db/sqlproductos.xlsx", sheetIndex = 1)
+productos<-read.xlsx("db/products.xlsx", sheetIndex = 1)
 names(productos)<-c("codigo","nombre","precio","utlidad")
 attach(productos)
 ```
 
 ### Read Ventas
 ```{r}
-ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
-head(ventas, 100)
+ventas<-read.table("db/sales.tsv",sep = '\t', header = TRUE)
+head(ventas, 10)
 ```
 
 ## Particionamiento de datos y testeo
 ```{r}
-t.id<-createDataPartition(ventas$MONTO)
-view(t.id)
+#t.id<-createDataPartition(ventas$MONTO)
+#view(t.id)
 ```
 
