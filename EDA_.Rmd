@@ -1,0 +1,199 @@
+---
+title: "EDA_"
+author: "Luisa López Cordero"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(corrplot)
+library(PerformanceAnalytics)
+library(factoextra)
+library(ade4)
+library(FactoMineR)
+library(readxl)
+```
+
+## ------------------------------LECTOR DE ARCHIVOS-----------------------------
+
+### READ CLIENTES
+```{r}
+clientes<-read.csv("db/clients.csv", sep = ",", header = T)
+head(clientes,3)
+```
+
+### READ PRODUCTOS
+```{r}
+require("readxl")
+productos<-readxl::read_xlsx("db/products.xlsx", sheet=1)
+head(productos,1)
+```
+
+### READ VENTAS
+```{r}
+ventas<-read.table("db/sqlsales.tsv",sep = '\t', header = TRUE)
+head(ventas,2)
+```
+
+## ------------------------------TIPOS DE DATOS---------------------------------
+### SUMMARY
+```{r}
+summary(clientes)
+summary(productos)
+summary(ventas)
+```
+
+## ------------------------------VALORES ATIPICOS-------------------------------
+### BOXPLOT
+```{r}
+boxplot(clientes$ESTADO_CIVIL, col = terrain.colors(2), main="Tabla Clientes - Est Civil")
+```
+
+```{r}
+boxplot(clientes$SEXO, col = terrain.colors(5), main="Tabla Clientes - Sexo")
+```
+
+### Productos
+```{r}
+boxplot(productos$PRECIO, col = terrain.colors(3), main="Tabla Productos - Precio")
+```
+
+```{r}
+boxplot(productos$UTLIDAD, col = terrain.colors(4), main="Tabla Productos - Utilidad")
+```
+
+### Ventas
+```{r}
+boxplot(ventas$DEPARTAMENTO, col = terrain.colors(4), main="Tabla Ventas - Departamento")
+```
+
+```{r}
+boxplot(ventas$MONTO, col = terrain.colors(4), main="Tabla Ventas - Monto")
+```
+
+```{r}
+boxplot(ventas$SUCURSAL, col = terrain.colors(4), main="Tabla Ventas - Sucursal")
+```
+
+```{r}
+boxplot(ventas$CONSECUTIVO, col = terrain.colors(4), main="Tabla Ventas - Producto")
+```
+
+```{r}
+hist(ventas$USUARIO, xlab = "Usuario", ylab = "Frecuencia", freq = F, main = "Histograma de Usuario ", col = "steelblue")
+
+curve(dnorm(x,
+            mean = mean(ventas$USUARIO),
+            sd= sd(ventas$USUARIO)), 
+            add= T, col="red")
+
+ggplot(data= ventas,
+       mapping = aes(x=USUARIO)) + 
+  geom_histogram(bins=9)
+```
+
+
+
+## ------------------------------DATOS CORRELACIONALES--------------------------
+
+### CORRELACIÓN SUCURSAL - DEPARTAMENTO
+```{r}
+cor(ventas)
+datcor<-cor(ventas)
+corrplot(datcor,method = "circle")
+
+datcor1<-data.frame(ventas$SUCURSAL, ventas$DEPARTAMENTO)
+chart.Correlation(datcor1)
+```
+
+### CORRELACIÓN CEDULA - USUARIO
+```{r}
+cor(ventas)
+datcor<-cor(ventas)
+corrplot(datcor,method = "circle")
+
+datcor1<-data.frame(ventas$CEDULA, ventas$MONTO)
+chart.Correlation(datcor1)
+```
+
+## -----------------------TENDENCIA Y CONCENTRACIÓN----------------------
+
+### DESVIACIÓN ESTANDAR - VENTAS
+```{r}
+sdatos<-scale(ventas)
+head(sdatos,10)
+```
+
+### MATRIZ DE ROTACIÓN
+```{r}
+acp<-prcomp(sdatos)
+acp
+```
+
+### Estadisticos del acp
+```{r}
+summary(acp)
+```
+
+```{r}
+biplot(acp, scale = 0)
+```
+
+###determinar la desviación estandar, la varianza no debe de ser menor a uno,
+### seguna el criterio de keise
+```{r}
+sddatos<-acp[[1]] #saca los valores
+vdatos<-sddatos^2
+
+```
+
+###Graficar los acp
+###```{r}
+###plot(acp, type="1")
+###fviz_eig(acp)
+###```
+
+### guardar los CP
+```{r}
+cp1<-acp[[2]][,1]
+cp2<-acp[[2]][,2]
+cp3<-acp[[2]][,3]
+```
+
+###Fusionamos y extraemos los individuos y los componentes
+```{r}
+componentes<-cbind(cp1, cp2, cp3)
+componentes
+
+individuos<- acp$x[,1:3]
+
+# x11() sacar grafico en pantalla
+s.corcircle(componentes[,-3],sub="CP1 Y CP2", possub="topright")
+s.corcircle(individuos[,-3],sub="CP1 Y CP2", possub="topright")
+
+s.corcircle(componentes[,-2],sub="CP2 Y CP3", possub="topright")
+s.corcircle(individuos[,-2],sub="CP2 Y CP3", possub="topright")
+
+s.corcircle(componentes[,-1],sub="CP2 Y CP3", possub="topright")
+s.corcircle(individuos[,-1],sub="CP2 Y CP3", possub="topright")
+
+```
+
+
+## ------------------------------DATOS NULOS------------------------------------
+### Clientes
+####```{r}
+####which(is.na(clientes))
+####```
+
+### Productos
+```{r}
+which(is.na(productos))
+```
+
+### Ventas
+```{r}
+which(is.na(ventas))
+```
+

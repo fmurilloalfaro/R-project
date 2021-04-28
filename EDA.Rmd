@@ -45,7 +45,7 @@ summary(ventas)
 
 ```
 
-### Valores atipicos: Boxplot
+## Valores atipicos: Boxplot
 ### Clientes
 ```{r}
 boxplot(clientes$ESTADO_CIVIL, col = terrain.colors(2), main="Tabla Clientes - Est Civil")
@@ -85,14 +85,17 @@ boxplot(ventas$PRODUCTO, col = terrain.colors(4), main="Tabla Ventas - Producto"
 boxplot(ventas$USUARIO, col = terrain.colors(4), main="Tabla Ventas - usuario")
 ```
 
-### Datos correlacionales
+## Datos correlacionales
 ### Productos
-```{r}
 
+```{r}
+View(ventas)
 
 ```
 
-### Datos nulos
+## Tendencia y Concentración de los datos
+
+## Datos nulos
 ### Clientes
 ###```{r}
 ###which(is.na(clientes))
