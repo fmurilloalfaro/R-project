@@ -9,54 +9,111 @@ output: html_document
 library(xlsx)
 library(dplyr)
 library(readxl)
+library(tidyverse)
+
+# Evitar warnings
+options(warn=-1)
 ```
 
-### Read Clientes
+
+## IMPORTACIÓN DE DATOS
+
+### READ CLIENTES CSV
 ```{r}
+#CLIENTES
 clientes<-read.csv("db/sqlclientes.csv", sep = ",", header = T)
 head(clientes)
 ```
 
-### Read Productos
+### READ PRODUCTOS XLSX
 ```{r}
+#PRODUCTOS
 productos<-read.xlsx("db/sqlproductos.xlsx", sheetIndex = 1)
 names(productos)<-c("codigo","nombre","precio","utlidad")
 attach(productos)
 ```
 
-### Read Ventas
+### READ VENTAS TSV
 ```{r}
+#VENTAS
 ventas<-read.table("db/sqlventas.tsv",sep = '\t', header = TRUE)
-head(ventas, 100)
+head(ventas, 1)
 ```
 
-### Revisar valores atípicos, solo se utilizará codigo y precio.
+
+## ELIMINAR VALORES NULOS
+
+### |PRODUCTOS|
+```{r}
+#PRODUCTOS
+which(is.na(productos))
+productos <- na.omit(productos) 
+```
+
+### |VENTAS|
+```{r}
+#VENTAS
+which(is.na(ventas))
+ventas <- na.omit(ventas)
+```
+
+### |CLIENTES|
+```{r}
+#CLIENTES
+#which(is.na(clientes))
+#clientes <- na.omit(clientes, 1) 
+```
+
+
+## VALORES ATÍPICOS
+
+### |VENTAS|
+```{r}
+boxplot(ventas$MONTO)
+boxplot(ventas$CONSECUTIVO)
+```
+
+### |PRODUCTOS|
 ```{r}
 boxplot(productos$codigo)
 boxplot(productos$precio)
-
-#which(is.na(productos))
-# productos <- na.omit(productos) # para eliminar valores nulos
+boxplot(productos$utlidad)
 ```
 
-### Para explorar los datos atípicos
-```{r}
-productos %>% filter(precio <= 95810) %>%
-```
 
-### Para explorar los datos no atípicos
+## VALORES NO ATÍPICOS
+
+### |PRODUCTOS|
 ```{r}
 productos %>% filter(precio <= 95810) %>%
   summarise(mediana = median(precio))
 ```
 
-### Histograma de los datos
+### |VENTAS|
 ```{r}
-hist(productos$precio, freq = F, col = "gray")
-lines(density(productos$precio), col="red")
+ventas %>% filter(MONTO <= 155201) %>%
+  summarise(mediana = median(MONTO))
 ```
 
-### Función de tratamiento de valores atípicos
+
+## HISTOGRAMA DE LOS DATOS
+
+### |PRODUCTOS|
+```{r}
+hist(productos$precio, freq = F, col = "pink")
+lines(density(productos$precio), col="blue")
+```
+
+### |VENTAS|
+```{r}
+hist(ventas$MONTO, freq = F, col = "pink")
+lines(density(ventas$MONTO), col="blue")
+```
+
+
+## TRATAMIENTO DE LOS VALORES ATÍPICOS
+
+### |PRODUCTOS|
 ```{r}
 outlayers <- function(productos,inferior,superior)
 {
@@ -66,28 +123,40 @@ outlayers <- function(productos,inferior,superior)
 }
 ```
 
+
+
 ### Para agregar la nueva columna con los datos tratados
+
 ```{r}
-cproductos<-productos %>% mutate(cprecio=outlayers(productos$precio, 1, 95810))
+cproductos<-productos %>% mutate(ccodigo=outlayers(productos$codigo, 10, 95810))
 head(cproductos)
 
-boxplot(cproductos$cprecio)
-
-# este todavia no funciona jeje
+boxplot(cproductos$ccodigo)
 ```
 
 ### Creación del modelo de regresión línea simple
+
 ```{r}
 modelo<-lm(data = cproductos, codigo, nombre, utlidad~cprecio)
 ```
 
 ### Ver los estadísticos del modelo
+
 ```{r}
 summary(lm_modelo)
 ```
 
+### 
 
+```{r}
+cor.test(cproductos$cprecio,cproductos$cprecio)
 
+plot(cproductos$cprecio$codigo,xlab = "precio",
+     ylab = "codigo", main ="Prueba de la regresión lineal " )
+abline(lm_modelo,col("blue"))
+
+ggplot(cproductos)
+```
 
 
 
