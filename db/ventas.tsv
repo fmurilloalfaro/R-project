@@ -1,0 +1,8 @@
+"COLUMN_NAME"	"DATA_TYPE"	"NULLABLE"	"DATA_DEFAULT"	"COLUMN_ID"	"COMMENTS"
+"CONSECUTIVO"	"NUMBER(5,0)"	"Yes"	""	1	""
+"CEDULA"	"NUMBER(10,0)"	"Yes"	""	2	""
+"DEPARTAMENTO"	"NUMBER(5,0)"	"Yes"	""	3	""
+"MONTO"	"NUMBER(25,2)"	"Yes"	""	4	""
+"SUCURSAL"	"NUMBER(3,0)"	"Yes"	""	5	""
+"PRODUCTO"	"NUMBER(5,0)"	"Yes"	""	6	""
+"USUARIO"	"NUMBER(38,0)"	"Yes"	""	7	""

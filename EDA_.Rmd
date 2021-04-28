@@ -1,0 +1,25 @@
+---
+title: "EDA_"
+author: "Luisa López Cordero"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(corrplot)
+library(PerformanceAnalytics)
+library(factoextra)
+library(ade4)
+library(FactoMineR)
+library(readxl)
+```
+
+## READ CLIENTES
+```{r}
+clientes<-read.csv("db/clientes.csv", sep = ",", header = T)
+```
+
+
+
+

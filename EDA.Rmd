@@ -88,7 +88,7 @@ boxplot(ventas$USUARIO, col = terrain.colors(4), main="Tabla Ventas - usuario")
 ## Datos correlacionales
 ### Productos
 ```{r}
-
+View(ventas)
 
 ```
 
