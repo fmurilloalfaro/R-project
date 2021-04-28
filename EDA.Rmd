@@ -86,7 +86,11 @@ boxplot(ventas$USUARIO, col = terrain.colors(4), main="Tabla Ventas - usuario")
 ```
 
 ### Datos correlacionales
-### Clientes
+### Productos
+```{r}
+
+
+```
 
 ### Datos nulos
 ### Clientes
