@@ -324,13 +324,137 @@ chart.Correlation(cor(ventas),histogram = T,method =&quot;spearman&quot;)</code>
 </div>
 <div id="particionamiento-de-datos-y-testeo" class="section level2" number="0.1">
 <h2 number="0.1"><span class="header-section-number">0.1</span> Particionamiento de datos y testeo</h2>
-<pre class="r"><code>t.id&lt;-createDataPartition(ventas$MONTO,p=0.7,list = F)
-View(t.id)</code></pre>
+<pre class="r"><code>dim(ventas) #cantidad total de datos</code></pre>
+<pre><code>## [1] 10000     7</code></pre>
+<pre class="r"><code>training&lt;-createDataPartition(ventas$MONTO,p=0.7,list = F)</code></pre>
 </div>
 <div id="creación-del-modelo-de-regresión-lineal-múltiple" class="section level2" number="0.2">
 <h2 number="0.2"><span class="header-section-number">0.2</span> Creación del modelo de regresión lineal múltiple</h2>
 <pre class="r"><code>attach(ventas)
-modelo&lt;-lm(data=ventas[t.id,],MONTO~.)</code></pre>
+modelo&lt;-lm(data=ventas[training,],MONTO~.)</code></pre>
+<div id="para-ver-datos-del-modelo" class="section level3" number="0.2.1">
+<h3 number="0.2.1"><span class="header-section-number">0.2.1</span> Para ver datos del modelo</h3>
+<pre class="r"><code>summary(modelo)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = MONTO ~ ., data = ventas[training, ])
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -57995 -26864  15072  21727  47053 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   5.796e+04  2.725e+03  21.269   &lt;2e-16 ***
+## CONSECUTIVO  -9.624e-02  1.260e-01  -0.764    0.445    
+## CEDULA        7.378e-02  6.863e-02   1.075    0.282    
+## DEPARTAMENTO  6.340e+00  4.695e+00   1.350    0.177    
+## SUCURSAL      4.896e+01  1.837e+02   0.266    0.790    
+## PRODUCTO     -7.354e+02  7.060e+01 -10.416   &lt;2e-16 ***
+## USUARIO      -7.740e+00  1.184e+01  -0.654    0.513    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 30540 on 6994 degrees of freedom
+## Multiple R-squared:  0.01581,    Adjusted R-squared:  0.01497 
+## F-statistic: 18.73 on 6 and 6994 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>step(modelo)</code></pre>
+<pre><code>## Start:  AIC=144601.6
+## MONTO ~ CONSECUTIVO + CEDULA + DEPARTAMENTO + SUCURSAL + PRODUCTO + 
+##     USUARIO
+## 
+##                Df  Sum of Sq        RSS    AIC
+## - SUCURSAL      1 6.6213e+07 6.5223e+12 144600
+## - USUARIO       1 3.9845e+08 6.5226e+12 144600
+## - CONSECUTIVO   1 5.4417e+08 6.5228e+12 144600
+## - CEDULA        1 1.0778e+09 6.5233e+12 144601
+## - DEPARTAMENTO  1 1.7000e+09 6.5239e+12 144601
+## &lt;none&gt;                       6.5222e+12 144602
+## - PRODUCTO      1 1.0118e+11 6.6234e+12 144707
+## 
+## Step:  AIC=144599.7
+## MONTO ~ CONSECUTIVO + CEDULA + DEPARTAMENTO + PRODUCTO + USUARIO
+## 
+##                Df  Sum of Sq        RSS    AIC
+## - USUARIO       1 3.9566e+08 6.5227e+12 144598
+## - CONSECUTIVO   1 5.4531e+08 6.5228e+12 144598
+## - CEDULA        1 1.0741e+09 6.5234e+12 144599
+## - DEPARTAMENTO  1 1.6985e+09 6.5240e+12 144600
+## &lt;none&gt;                       6.5223e+12 144600
+## - PRODUCTO      1 1.0112e+11 6.6234e+12 144705
+## 
+## Step:  AIC=144598.1
+## MONTO ~ CONSECUTIVO + CEDULA + DEPARTAMENTO + PRODUCTO
+## 
+##                Df  Sum of Sq        RSS    AIC
+## - CONSECUTIVO   1 5.5167e+08 6.5232e+12 144597
+## - CEDULA        1 1.0770e+09 6.5238e+12 144597
+## - DEPARTAMENTO  1 1.6864e+09 6.5244e+12 144598
+## &lt;none&gt;                       6.5227e+12 144598
+## - PRODUCTO      1 1.0110e+11 6.6238e+12 144704
+## 
+## Step:  AIC=144596.7
+## MONTO ~ CEDULA + DEPARTAMENTO + PRODUCTO
+## 
+##                Df  Sum of Sq        RSS    AIC
+## - CEDULA        1 1.0434e+09 6.5243e+12 144596
+## - DEPARTAMENTO  1 1.6633e+09 6.5249e+12 144597
+## &lt;none&gt;                       6.5232e+12 144597
+## - PRODUCTO      1 1.0112e+11 6.6244e+12 144702
+## 
+## Step:  AIC=144595.9
+## MONTO ~ DEPARTAMENTO + PRODUCTO
+## 
+##                Df  Sum of Sq        RSS    AIC
+## - DEPARTAMENTO  1 1.6983e+09 6.5260e+12 144596
+## &lt;none&gt;                       6.5243e+12 144596
+## - PRODUCTO      1 1.0110e+11 6.6254e+12 144702
+## 
+## Step:  AIC=144595.7
+## MONTO ~ PRODUCTO
+## 
+##            Df  Sum of Sq       RSS    AIC
+## &lt;none&gt;                   6.526e+12 144596
+## - PRODUCTO  1 1.0104e+11 6.627e+12 144701</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = MONTO ~ PRODUCTO, data = ventas[training, ])
+## 
+## Coefficients:
+## (Intercept)     PRODUCTO  
+##     58659.4       -734.8</code></pre>
+<pre class="r"><code>confint(modelo)</code></pre>
+<pre><code>##                      2.5 %        97.5 %
+## (Intercept)   5.261401e+04 63296.9850314
+## CONSECUTIVO  -3.432251e-01     0.1507372
+## CEDULA       -6.075332e-02     0.2083201
+## DEPARTAMENTO -2.864773e+00    15.5437921
+## SUCURSAL     -3.112375e+02   409.1609966
+## PRODUCTO     -8.738335e+02  -597.0264179
+## USUARIO      -3.095043e+01    15.4712826</code></pre>
+</div>
+<div id="explorar-los-residuos-del-modelo" class="section level3" number="0.2.2">
+<h3 number="0.2.2"><span class="header-section-number">0.2.2</span> Explorar los residuos del modelo</h3>
+<pre class="r"><code>boxplot(modelo$residuals, col = &quot;aquamarine3&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+</div>
+<div id="predicción" class="section level3" number="0.2.3">
+<h3 number="0.2.3"><span class="header-section-number">0.2.3</span> Predicción</h3>
+<pre class="r"><code>names(ventas)</code></pre>
+<pre><code>## [1] &quot;CONSECUTIVO&quot;  &quot;CEDULA&quot;       &quot;DEPARTAMENTO&quot; &quot;MONTO&quot;        &quot;SUCURSAL&quot;    
+## [6] &quot;PRODUCTO&quot;     &quot;USUARIO&quot;</code></pre>
+<pre class="r"><code>prediccion&lt;-predict(modelo,ventas[-training,])
+head(prediccion)</code></pre>
+<pre><code>##        1        5       10       14       15       25 
+## 54919.45 51967.49 46050.99 46969.55 50337.61 54369.37</code></pre>
+</div>
+<div id="juego-de-datos-nuevos-para-predecir" class="section level3" number="0.2.4">
+<h3 number="0.2.4"><span class="header-section-number">0.2.4</span> Juego de datos nuevos para predecir</h3>
+<pre class="r"><code>nuevas_ventas&lt;-data.frame(CONSECUTIVO=23, CEDULA=2102, DEPARTAMENTO=20917, MONTO=180, SUCURSAL=15, PRODUCTO=90367, USUARIO=153)
+predict(modelo,nuevas_ventas)</code></pre>
+<pre><code>##         1 
+## -66268335</code></pre>
+</div>
 </div>
 
 

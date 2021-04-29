@@ -68,8 +68,32 @@ modelo<-lm(data=ventas[training,],MONTO~.)
 
 ```
 
-
+### Para ver datos del modelo
 ```{r}
 summary(modelo)
+step(modelo)
+confint(modelo)
 ```
+
+
+### Explorar los residuos del modelo
+```{r}
+boxplot(modelo$residuals, col = "aquamarine3")
+```
+
+
+### Predicción
+```{r}
+names(ventas)
+prediccion<-predict(modelo,ventas[-training,])
+head(prediccion)
+```
+
+### Juego de datos nuevos para predecir
+```{r}
+nuevas_ventas<-data.frame(CONSECUTIVO=23, CEDULA=2102, DEPARTAMENTO=20917, MONTO=180, SUCURSAL=15, PRODUCTO=90367, USUARIO=153)
+predict(modelo,nuevas_ventas)
+```
+
+
 
