@@ -46,43 +46,43 @@ summary(ventas)
 ```
 
 ## ------------------------------VALORES ATIPICOS-------------------------------
-### BOXPLOT
+### BOXPLOT 
 ```{r}
-boxplot(clientes$ESTADO_CIVIL, col = terrain.colors(2), main="Tabla Clientes - Est Civil")
+boxplot(clientes$ESTADO_CIVIL, col = "hotpink", main="Tabla Clientes - Est Civil")
 ```
 
 ```{r}
-boxplot(clientes$SEXO, col = terrain.colors(5), main="Tabla Clientes - Sexo")
+boxplot(clientes$SEXO, col = "hotpink2", main="Tabla Clientes - Sexo")
 ```
 
 ### Productos
 ```{r}
-boxplot(productos$PRECIO, col = terrain.colors(3), main="Tabla Productos - Precio")
+boxplot(productos$PRECIO, col = "indianred1", main="Tabla Productos - Precio")
 ```
 
 ```{r}
-boxplot(productos$UTLIDAD, col = terrain.colors(4), main="Tabla Productos - Utilidad")
+boxplot(productos$UTLIDAD, col = "indianred3", main="Tabla Productos - Utilidad")
 ```
 
 ### Ventas
 ```{r}
-boxplot(ventas$DEPARTAMENTO, col = terrain.colors(4), main="Tabla Ventas - Departamento")
+boxplot(ventas$DEPARTAMENTO, col = "coral", main="Tabla Ventas - Departamento")
 ```
 
 ```{r}
-boxplot(ventas$MONTO, col = terrain.colors(4), main="Tabla Ventas - Monto")
+boxplot(ventas$MONTO, col = "coral1", main="Tabla Ventas - Monto")
 ```
 
 ```{r}
-boxplot(ventas$SUCURSAL, col = terrain.colors(4), main="Tabla Ventas - Sucursal")
+boxplot(ventas$SUCURSAL, col = "coral2", main="Tabla Ventas - Sucursal")
 ```
 
 ```{r}
-boxplot(ventas$CONSECUTIVO, col = terrain.colors(4), main="Tabla Ventas - Producto")
+boxplot(ventas$CONSECUTIVO, col = "coral3", main="Tabla Ventas - Producto")
 ```
 
 ```{r}
-hist(ventas$USUARIO, xlab = "Usuario", ylab = "Frecuencia", freq = F, main = "Histograma de Usuario ", col = "steelblue")
+hist(ventas$USUARIO, xlab = "Usuario", ylab = "Frecuencia", freq = F, main = "Histograma de Usuario ", col = "deeppink4")
 
 curve(dnorm(x,
             mean = mean(ventas$USUARIO),

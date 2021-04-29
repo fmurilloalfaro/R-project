@@ -2,7 +2,11 @@
 title: "ingerir"
 author: "Fernanda Murillo"
 date: "27/4/2021"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -11,13 +15,10 @@ library(dplyr)
 library(readxl)
 library(tidyverse)
 library(corrplot)
-
-# Evitar warnings
-#options(warn=-1)
 ```
 
 
-## IMPORTACIÓN DE DATOS
+## ---------------------- IMPORTACIÓN DE DATOS ----------------------
 
 ### READ CLIENTES CSV
 ```{r}
@@ -26,7 +27,7 @@ clientes<-read.csv("db/clients.csv", sep = ",", header = T)
 head(clientes)
 ```
 
-### READ PRODUCTOS XLSX
+### ---------------------- READ PRODUCTOS XLSX ----------------------
 ```{r}
 #PRODUCTOS
 productos<-read.xlsx("db/products.xlsx", sheetIndex = 1)
@@ -34,39 +35,39 @@ names(productos)<-c("codigo","nombre","precio","utlidad")
 attach(productos)
 ```
 
-### READ VENTAS TSV
+### ---------------------- READ VENTAS TSV ----------------------
 ```{r}
 #VENTAS
-ventas<-read.table("db/sales.tsv",sep = '\t', header = TRUE)
-head(ventas, 1)
+ventas<-read.table("db/sqlsales.tsv",sep = '\t', header = TRUE)
+head(ventas, 10)
 summary(ventas)
 glimpse(ventas)
 cor(ventas$MONTO,ventas$SUCURSAL)
 #corrplot(cor(ventas$MONTO), method = "color")
 
-for (i in 1:14) {
-  boxplot(ventas[,i], main=names(ventas[i]))
-}
+#for (i in 1:14) {
+ # boxplot(ventas[,i], main=names(ventas[i]))
+#}
 ```
 
 
-## ELIMINAR VALORES NULOS
+## ---------------------- ELIMINAR VALORES NULOS ----------------------
 
-### |PRODUCTOS|
+### ---------------------- |PRODUCTOS| ----------------------
 ```{r}
 #PRODUCTOS
 which(is.na(productos))
 productos <- na.omit(productos) 
 ```
 
-### |VENTAS|
+### ---------------------- |VENTAS| ----------------------
 ```{r}
 #VENTAS
 which(is.na(ventas))
 ventas <- na.omit(ventas)
 ```
 
-### |CLIENTES|
+### ---------------------- |CLIENTES| ----------------------
 ```{r}
 #CLIENTES
 #which(is.na(clientes))
@@ -74,57 +75,59 @@ ventas <- na.omit(ventas)
 ```
 
 
-## VALORES ATÍPICOS
+## ---------------------- VALORES ATÍPICOS ----------------------
 
-### |VENTAS|
+<div>Un valor atípico es una observación extrañamente grande o pequeña, los valores atípicos pueden tener un efecto desproporcionado en los resultados estadísticos, como la media, lo que pude conducir a interpretaciones engañosas.</div>
+
+### ---------------------- |VENTAS| ----------------------
 ```{r}
-boxplot(ventas$MONTO)
-boxplot(ventas$CONSECUTIVO)
+boxplot(ventas$MONTO, col = "aquamarine2")
+boxplot(ventas$CONSECUTIVO, col = "darkolivegreen2")
 ```
 
-### |PRODUCTOS|
+### ---------------------- |PRODUCTOS| ----------------------
 ```{r}
-boxplot(productos$codigo)
-boxplot(productos$precio)
-boxplot(productos$utlidad)
+boxplot(productos$codigo, col = "aquamarine2")
+boxplot(productos$precio, col = "darkolivegreen2")
+boxplot(productos$utlidad, col = "aquamarine2")
 ```
 
 
-## VALORES NO ATÍPICOS
+## ---------------------- VALORES NO ATÍPICOS ----------------------
 
-### |PRODUCTOS|
+### ---------------------- |PRODUCTOS| ----------------------
 ```{r}
 productos %>% filter(precio <= 95810) %>%
   summarise(mediana = median(precio))
 ```
 
-### |VENTAS|
+### ---------------------- |VENTAS| ----------------------
 ```{r}
 ventas %>% filter(MONTO <= 155201) %>%
   summarise(mediana = median(MONTO))
 ```
 
 
-## HISTOGRAMA DE LOS DATOS
+## ---------------------- HISTOGRAMA DE LOS DATOS ----------------------
+
+### ---------------------- |PRODUCTOS|----------------------
+```{r}
+hist(productos$precio, freq = F, col = "aquamarine2")
+lines(density(productos$precio), col ="magenta2")
+```
+
+### ---------------------- |VENTAS| ----------------------
+```{r}
+hist(ventas$MONTO, freq = F, col = "darkolivegreen2")
+lines(density(ventas$MONTO), col="magenta2")
+```
+
+
+## ------------ TRATAMIENTO DE LOS VALORES ATÍPICOS ------------
 
 ### |PRODUCTOS|
 ```{r}
-hist(productos$precio, freq = F, col = "pink")
-lines(density(productos$precio), col="blue")
-```
-
-### |VENTAS|
-```{r}
-hist(ventas$MONTO, freq = F, col = "pink")
-lines(density(ventas$MONTO), col="blue")
-```
-
-
-## TRATAMIENTO DE LOS VALORES ATÍPICOS
-
-### |PRODUCTOS|
-```{r}
-outlayers <- function(productos,inferior,superior)
+outlayers <- function(ventas,inferior,superior)
 {
   data[data < inferior] <- mean(data)
   data[data > superior] <- median(data)
@@ -133,56 +136,68 @@ outlayers <- function(productos,inferior,superior)
 ```
 
 
-
-### Para agregar la nueva columna con los datos tratados
+### ---------------- Para agregar la nueva columna con los datos tratados ----------------
 
 ```{r}
-cventas<-ventas %>% mutate(c=outlayers(productos$utlidad, 1, 23))
-head(cproductos)
+#cventas<-ventas %>% mutate(cmonto=outlayers(ventas$MONTO, 10, 5662))
+#head(cventas)
 
-boxplot(cproductos$cutlidad)
+#boxplot(cventas)
 ```
 
 ### Creación del modelo de regresión línea simple
 
 ```{r}
-modelo<-lm(data = cproductos, codigo, nombre, utlidad~cprecio)
+#modelo<-lm(data = cproductos, codigo, nombre, utlidad~cprecio)
 ```
 
 ### Ver los estadísticos del modelo
 
 ```{r}
-summary(lm_modelo)
+#summary(lm_modelo)
 ```
 
 ### 
 
 ```{r}
-cor.test(cproductos$cprecio,cproductos$cprecio)
+#cor.test(cproductos$cprecio,cproductos$cprecio)
 
-plot(cproductos$cprecio$codigo,xlab = "precio",
-     ylab = "codigo", main ="Prueba de la regresión lineal " )
-abline(lm_modelo,col("blue"))
+#plot(cproductos$cprecio$codigo,xlab = "precio",
+#     ylab = "codigo", main ="Prueba de la regresión lineal " )
+#abline(lm_modelo,col("blue"))
 
-ggplot(cproductos,aes(cprecio,codigo))+
-  geom_point(colours="red")+
-  geom_smooth(method = "lm",colour="blue")
+#ggplot(cproductos,aes(cprecio,codigo))+
+#  geom_point(colours="red")+
+#  geom_smooth(method = "lm",colour="blue")
 ```
 
 
 ## EVALUAR LA PREDICCIÓN
 ```{r}
-predict(lm_modelo.data.frame(cprecio=95810))
+#predict(lm_modelo.data.frame(cprecio=95810))
 ```
 
 ## EVALUAR SOBRE LOS DATOS EXISTENTES
 ```{r}
-resultado<-data.frame(cproductos$cprecio,codigo,lm_modelo$fitted.values, round(codigo-lm_modelo$fitted.values))
+#resultado<-data.frame(cproductos$cprecio,codigo,lm_modelo$fitted.values, round(codigo-lm_modelo$fitted.values))
 
-names(resultado)<-c("precio","codigo","ventas","diferencia")
+#names(resultado)<-c("precio","codigo","ventas","diferencia")
 
-view(resultado)
+#view(resultado)
 
 ```
 
+
+
+```{r}
+corrplot(cor(ventas),method = "square", col = terrain.colors(100))
+```
+
+
+```{r}
+for (i in 1:7) {
+  boxplot(ventas[,i], main=names(ventas[i]), col = "aquamarine3")
+  
+}
+```
 
