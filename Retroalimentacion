@@ -1,0 +1,33 @@
+
+Observaciones generales del EDA
+
+1. Aplicar boxplot sobre variables como sexo o estado civil no tiene mucho sentido puesto que generalmente los valores son muy pocos 
+tiene mas sentido determinar si existen valores nulos de esas variables en dicho conjunto de datos 
+
+2. En un EDA , cada que se explora una variable debe de estar acompa;ado de la descripcion de los fenomenos encontrados, no solo poner los graficos. que por si 
+solo muestran cierta informacion pero siempre es bueno indicar en texto la explicacion de lo encontrado 
+
+3. En EDA es una exploracion de datos, generalmente se recomienda realizar preguntas que la exploracion pueda constestar
+por ejemplo si existieran datos de fecha , en que periodo hay concentracion de datos  
+
+4. Se hace evidente que falto mucho trabajo de conjunto de datos (DPLYR) formar nuevos datos,  aunque carga varios archivos no los fusiona y no logra crear un conjunto de datos 
+integrado...  
+
+5. Falto mucha exploracion de datos.
+
+
+Observaciones generales del archivo ingerir
+
+1. Mucho codigo comentado (Funciona o no)???
+2. Falta documentar mucho el archivo explicar los pasos que se realizan
+
+Observaciones generales de los archivo modelos
+
+1. Se pedian 2 modelos , solo fue creado el modelo de regresion lineal , aunque en los datos existia potencial para varios otros
+2. En todos los archivos se leen los mismas fuentes, se supone que este ultimo debia recibir el archivo depurado y unificado
+al final solo realiza la preduccion con el archivo de ventas , y deja sin efecto los otros .. entonces no hay justificacion documentada 
+del porque los cargo o porque no los utilizo en en un juego de datos integral.
+3. Muchos pasos corresponden al los archivos de ingerir o  del EDA y fueron copiados en el archivo de modelos sin ninguna relacion aparente 
+
+Observaciones generales de la aplicacion Shinny 
+1. Funcional..
